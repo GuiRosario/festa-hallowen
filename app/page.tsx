@@ -7,17 +7,50 @@ import {
   CalendarClock,
   MessageCircle,
   CreditCard,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   const [muted, setMuted] = useState(false);
+  const [iframe, setIframe] = useState<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
-    return () => document.body.classList.remove("no-scroll");
+
+    // Cria div para o iframe
+    const ytPlayer = document.createElement("div");
+    ytPlayer.id = "yt-player";
+    document.body.appendChild(ytPlayer);
+
+    const newIframe = document.createElement("iframe");
+    newIframe.width = "0";
+    newIframe.height = "0";
+    newIframe.allow = "autoplay";
+    newIframe.src = `https://www.youtube.com/embed/gqVyois9mp4?autoplay=1&loop=1&playlist=gqVyois9mp4&mute=${
+      muted ? 1 : 0
+    }`;
+    newIframe.frameBorder = "0";
+    ytPlayer.appendChild(newIframe);
+
+    setIframe(newIframe);
+
+    return () => {
+      document.body.classList.remove("no-scroll");
+      ytPlayer.remove();
+    };
   }, []);
+
+  // Atualiza mute do iframe quando o estado muda
+  useEffect(() => {
+    if (iframe) {
+      iframe.src = `https://www.youtube.com/embed/gqVyois9mp4?autoplay=1&loop=1&playlist=gqVyois9mp4&mute=${
+        muted ? 1 : 0
+      }`;
+    }
+  }, [muted, iframe]);
 
   const toggleMute = () => setMuted(!muted);
 
@@ -43,25 +76,16 @@ export default function HomePage() {
         />
       </div>
 
-      {/* ---------- Música do YouTube ---------- */}
-      <iframe
-        className="absolute w-0 h-0"
-        src={`https://www.youtube.com/embed/gqVyois9mp4?autoplay=1&loop=1&playlist=gqVyois9mp4&controls=0&mute=${
-          muted ? 1 : 0
-        }`}
-        allow="autoplay"
-      ></iframe>
+      {/* ---------- Botão de Mutar Fora do Card ---------- */}
+      <Button
+        onClick={toggleMute}
+        className="absolute top-6 right-6 p-3 rounded-full bg-gray-800/70 hover:bg-gray-700 text-white z-20"
+      >
+        {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+      </Button>
 
       {/* ---------- Card do convite ---------- */}
       <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-gray-900/80 p-8 text-center shadow-2xl shadow-halloween-500/20 border-2 border-halloween-500 backdrop-blur-sm">
-        {/* Botão de Mutar */}
-        <Button
-          onClick={toggleMute}
-          className="absolute top-4 right-4 p-2 rounded-full bg-gray-800/70 hover:bg-gray-700 text-white z-20"
-        >
-          {muted ? "🔇" : "🔊"}
-        </Button>
-
         <div className="absolute -top-10 -right-8 text-black/20">
           <Ghost size={150} className="-rotate-12" />
         </div>
