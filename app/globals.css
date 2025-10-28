@@ -1,26 +1,296 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ---------- Tema base ---------- */
+@theme {
+  --font-family-title: var(--font-cinzel-decorative), serif;
+  --font-family-body: var(--font-merriweather), serif;
+  --font-family-sans: var(--font-inter), sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-halloween-500: #f97316;
+  --color-halloween-600: #ea580c;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ghost-light: rgba(255, 255, 255, 0.8);
+  --color-ghost-orange: rgba(249, 115, 22, 0.8);
+  --color-ghost-purple: rgba(168, 85, 247, 0.8);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-body);
+  @apply bg-gray-900 text-gray-200 antialiased;
+}
+
+/* ---------- Fundo animado ---------- */
+@keyframes gradient-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animated-gradient {
+  background: linear-gradient(270deg, #8b5cf6, #f97316, #ec4899);
+  background-size: 600% 600%;
+  animation: gradient-bg 30s ease infinite;
+}
+
+/* ---------- Fantasmas - movimento linear ---------- */
+@keyframes float-ghost {
+  0% {
+    transform: translateX(-50vw) translateY(0);
+    opacity: 0.95;
+  }
+  10% {
+    transform: translateX(-33vw) translateY(-80px);
+  }
+  20% {
+    transform: translateX(-16vw) translateY(-160px);
+  }
+  30% {
+    transform: translateX(1vw) translateY(-80px);
+  }
+  40% {
+    transform: translateX(18vw) translateY(0);
+  }
+  50% {
+    transform: translateX(35vw) translateY(80px);
+  }
+  60% {
+    transform: translateX(52vw) translateY(160px);
+  }
+  70% {
+    transform: translateX(69vw) translateY(80px);
+  }
+  80% {
+    transform: translateX(86vw) translateY(0);
+  }
+  90% {
+    transform: translateX(103vw) translateY(-80px);
+  }
+  100% {
+    transform: translateX(120vw) translateY(0);
+    opacity: 0;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@keyframes float-ghost-mobile-1 {
+  0% {
+    transform: translateX(-50vw) translateY(0);
+    opacity: 1;
+  }
+  10% {
+    transform: translateX(-33vw) translateY(-60px);
+  }
+  20% {
+    transform: translateX(-16vw) translateY(-120px);
+  }
+  30% {
+    transform: translateX(1vw) translateY(-60px);
+  }
+  40% {
+    transform: translateX(18vw) translateY(0);
+  }
+  50% {
+    transform: translateX(35vw) translateY(60px);
+  }
+  60% {
+    transform: translateX(52vw) translateY(120px);
+  }
+  70% {
+    transform: translateX(69vw) translateY(60px);
+  }
+  80% {
+    transform: translateX(86vw) translateY(0);
+  }
+  90% {
+    transform: translateX(103vw) translateY(-60px);
+  }
+  100% {
+    transform: translateX(120vw) translateY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes float-ghost-mobile-2 {
+  0% {
+    transform: translateX(-50vw) translateY(20px);
+    opacity: 1;
+  }
+  10% {
+    transform: translateX(-33vw) translateY(-60px);
+  }
+  20% {
+    transform: translateX(-16vw) translateY(-120px);
+  }
+  30% {
+    transform: translateX(1vw) translateY(-60px);
+  }
+  40% {
+    transform: translateX(18vw) translateY(20px);
+  }
+  50% {
+    transform: translateX(35vw) translateY(120px);
+  }
+  60% {
+    transform: translateX(52vw) translateY(60px);
+  }
+  70% {
+    transform: translateX(69vw) translateY(-20px);
+  }
+  80% {
+    transform: translateX(86vw) translateY(0);
+  }
+  90% {
+    transform: translateX(103vw) translateY(20px);
+  }
+  100% {
+    transform: translateX(120vw) translateY(20px);
+    opacity: 0;
+  }
+}
+
+@keyframes float-ghost-mobile-3 {
+  0% {
+    transform: translateX(-50vw) translateY(-20px);
+    opacity: 1;
+  }
+  10% {
+    transform: translateX(-33vw) translateY(80px);
+  }
+  20% {
+    transform: translateX(-16vw) translateY(160px);
+  }
+  30% {
+    transform: translateX(1vw) translateY(80px);
+  }
+  40% {
+    transform: translateX(18vw) translateY(-20px);
+  }
+  50% {
+    transform: translateX(35vw) translateY(-160px);
+  }
+  60% {
+    transform: translateX(52vw) translateY(-80px);
+  }
+  70% {
+    transform: translateX(69vw) translateY(20px);
+  }
+  80% {
+    transform: translateX(86vw) translateY(0);
+  }
+  90% {
+    transform: translateX(103vw) translateY(10px);
+  }
+  100% {
+    transform: translateX(120vw) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+@keyframes float-ghost-mobile-4 {
+  0% {
+    transform: translateX(-50vw) translateY(0);
+    opacity: 1;
+  }
+  10% {
+    transform: translateX(-33vw) translateY(-40px);
+  }
+  20% {
+    transform: translateX(-16vw) translateY(-80px);
+  }
+  30% {
+    transform: translateX(1vw) translateY(-40px);
+  }
+  40% {
+    transform: translateX(18vw) translateY(0);
+  }
+  50% {
+    transform: translateX(35vw) translateY(40px);
+  }
+  60% {
+    transform: translateX(52vw) translateY(80px);
+  }
+  70% {
+    transform: translateX(69vw) translateY(40px);
+  }
+  80% {
+    transform: translateX(86vw) translateY(0);
+  }
+  90% {
+    transform: translateX(103vw) translateY(-20px);
+  }
+  100% {
+    transform: translateX(120vw) translateY(0);
+    opacity: 0;
+  }
+}
+
+/* ---------- Utilitários ---------- */
+@layer utilities {
+  .animate-float-ghost {
+    transform: translateX(-50vw);
+    opacity: 1;
+    animation: float-ghost 12s linear infinite;
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+  }
+
+  @media (max-width: 768px) {
+    .animate-float-ghost:nth-child(1) {
+      animation: float-ghost-mobile-1 10s linear infinite;
+    }
+    .animate-float-ghost:nth-child(2) {
+      animation: float-ghost-mobile-2 12s linear infinite;
+    }
+    .animate-float-ghost:nth-child(3) {
+      animation: float-ghost-mobile-3 11s linear infinite;
+    }
+    .animate-float-ghost:nth-child(4) {
+      animation: float-ghost-mobile-4 13s linear infinite;
+    }
+  }
+
+  .text-ghost-light {
+    color: var(--color-ghost-light);
+  }
+  .text-ghost-orange {
+    color: var(--color-ghost-orange);
+  }
+  .text-ghost-purple {
+    color: var(--color-ghost-purple);
+  }
+
+  .glow-ghost-light {
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.95))
+      drop-shadow(0 0 50px rgba(255, 255, 255, 0.7));
+  }
+  .glow-ghost-orange {
+    filter: drop-shadow(0 0 25px rgba(249, 115, 22, 0.95))
+      drop-shadow(0 0 50px rgba(249, 115, 22, 0.7));
+  }
+  .glow-ghost-purple {
+    filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.95))
+      drop-shadow(0 0 50px rgba(168, 85, 247, 0.7));
+  }
+}
+
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-star {
+  animation-name: star-twinkle;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
