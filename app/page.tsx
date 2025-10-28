@@ -9,54 +9,23 @@ import {
   CreditCard,
   Volume2,
   VolumeX,
+  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
-  const [muted, setMuted] = useState(false);
-  const [iframe, setIframe] = useState<HTMLIFrameElement | null>(null);
+  const [muted, setMuted] = useState(true);
+  const toggleMute = () => setMuted(!muted);
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
-
-    // Cria div para o iframe
-    const ytPlayer = document.createElement("div");
-    ytPlayer.id = "yt-player";
-    document.body.appendChild(ytPlayer);
-
-    const newIframe = document.createElement("iframe");
-    newIframe.width = "0";
-    newIframe.height = "0";
-    newIframe.allow = "autoplay";
-    newIframe.src = `https://www.youtube.com/embed/gqVyois9mp4?autoplay=1&loop=1&playlist=gqVyois9mp4&mute=${
-      muted ? 1 : 0
-    }`;
-    newIframe.frameBorder = "0";
-    ytPlayer.appendChild(newIframe);
-
-    setIframe(newIframe);
-
-    return () => {
-      document.body.classList.remove("no-scroll");
-      ytPlayer.remove();
-    };
+    return () => document.body.classList.remove("no-scroll");
   }, []);
-
-  // Atualiza mute do iframe quando o estado muda
-  useEffect(() => {
-    if (iframe) {
-      iframe.src = `https://www.youtube.com/embed/gqVyois9mp4?autoplay=1&loop=1&playlist=gqVyois9mp4&mute=${
-        muted ? 1 : 0
-      }`;
-    }
-  }, [muted, iframe]);
-
-  const toggleMute = () => setMuted(!muted);
 
   return (
     <main className="relative flex min-h-screen items-center justify-center p-4 overflow-hidden">
-      {/* ---------- Fantasmas ---------- */}
+      {/* Fantasmas */}
       <div className="absolute inset-0 z-0 pointer-events-none mix-blend-normal backdrop-blur-sm">
         <Ghost
           className="absolute top-1/4 left-0 text-ghost-light glow-ghost-light animate-float-ghost md:size-[120px] size-[100px]"
@@ -76,15 +45,36 @@ export default function HomePage() {
         />
       </div>
 
-      {/* ---------- Botão de Mutar Fora do Card ---------- */}
-      <Button
-        onClick={toggleMute}
-        className="absolute top-6 right-6 p-3 rounded-full bg-gray-800/70 hover:bg-gray-700 text-white z-20"
-      >
-        {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-      </Button>
+      {/* Música do YouTube */}
+      <iframe
+        className="absolute w-0 h-0"
+        src={`https://www.youtube.com/embed/gqVyois9mp4?autoplay=1&loop=1&playlist=gqVyois9mp4&mute=${
+          muted ? 1 : 0
+        }`}
+        allow="autoplay"
+      ></iframe>
 
-      {/* ---------- Card do convite ---------- */}
+      {/* Botão de Mute + seta */}
+      <div className="fixed top-5 right-5 z-50 flex items-center space-x-2">
+        {muted && (
+          <div className="flex items-center animate-bounce-slow mr-1">
+            <span className="text-white font-semibold text-sm tracking-wide whitespace-nowrap animate-glow mr-1">
+              Clique aqui
+            </span>
+            <ArrowRight size={22} className="text-white animate-glow" />
+          </div>
+        )}
+
+        <button
+          onClick={toggleMute}
+          className="p-3 rounded-full bg-gray-900/70 hover:bg-gray-800 text-white shadow-lg transition"
+          title={muted ? "Ativar som" : "Desativar som"}
+        >
+          {muted ? <VolumeX size={22} /> : <Volume2 size={22} />}
+        </button>
+      </div>
+
+      {/* Card */}
       <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-gray-900/80 p-8 text-center shadow-2xl shadow-halloween-500/20 border-2 border-halloween-500 backdrop-blur-sm">
         <div className="absolute -top-10 -right-8 text-black/20">
           <Ghost size={150} className="-rotate-12" />
@@ -108,16 +98,33 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <CalendarClock className="size-5 flex-shrink-0 text-halloween-500" />
               <span>
-                <span className="font-bold text-white">Data:</span> 31 de
-                Outubro, 20:00
+                <span className="font-bold text-white">Data:</span> 15 de
+                Novembro, 20:00
               </span>
             </div>
-            <div className="flex items-center gap-3">
-              <MapPin className="size-5 flex-shrink-0 text-halloween-500" />
-              <span>
-                <span className="font-bold text-white">Local:</span> A Mansão
-                Mal-Assombrada
-              </span>
+            <div className="flex items-center gap-3 justify-between">
+              <div className="flex items-center gap-3">
+                <MapPin className="size-5 flex-shrink-0 text-halloween-500" />
+                <span>
+                  <span className="font-bold text-white">Local:</span> A Chácara
+                  Mal-Assombrada
+                </span>
+              </div>
+              {/* Botão do Google Maps */}
+              <Button
+                asChild
+                size="sm"
+                className="bg-halloween-500 text-gray-900 hover:bg-halloween-600 flex items-center gap-1"
+              >
+                <a
+                  href="https://www.google.com/maps/place/10%C2%B014'14.9%22S+48%C2%B011'35.1%22W/@-10.2374592,-48.1956545,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-10.2374592!4d-48.1930796?entry=ttu&g_ep=EgoyMDI1MTAyNi4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MapPin size={16} />
+                  Ver mapa
+                </a>
+              </Button>
             </div>
           </div>
 
@@ -155,6 +162,38 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes bounce-slow {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        @keyframes glow {
+          0% {
+            opacity: 0.6;
+            text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+          }
+          50% {
+            opacity: 1;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+          }
+          100% {
+            opacity: 0.6;
+            text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+          }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 1.5s infinite ease-in-out;
+        }
+        .animate-glow {
+          animation: glow 1.8s infinite ease-in-out;
+        }
+      `}</style>
     </main>
   );
 }
