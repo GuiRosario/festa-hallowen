@@ -98,15 +98,15 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <CalendarClock className="size-5 flex-shrink-0 text-halloween-500" />
               <span>
-                <span className="font-bold text-white">Data:</span> 31 de
-                Outubro, 20:00
+                <span className="font-bold text-white">Data:</span> 15 de
+                Novembro, 20:00
               </span>
             </div>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
                 <MapPin className="size-5 flex-shrink-0 text-halloween-500" />
                 <span>
-                  <span className="font-bold text-white">Local:</span> A Mansão
+                  <span className="font-bold text-white">Local:</span> A Chácara
                   Mal-Assombrada
                 </span>
               </div>
@@ -117,7 +117,7 @@ export default function HomePage() {
                 className="bg-halloween-500 text-gray-900 hover:bg-halloween-600 flex items-center gap-1"
               >
                 <a
-                  href="https://maps.google.com/?q=Mansão+Mal+Assombrada"
+                  href="https://www.google.com/maps/place/10%C2%B014'14.9%22S+48%C2%B011'35.1%22W/@-10.2374592,-48.1956545,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-10.2374592!4d-48.1930796?entry=ttu&g_ep=EgoyMDI1MTAyNi4wIKXMDSoASAFQAw%3D%3D"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
