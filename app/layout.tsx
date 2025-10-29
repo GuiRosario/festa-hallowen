@@ -11,7 +11,7 @@ const inter = Inter({
 // Nova Fonte do Título
 const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
-  weight: "700", // Apenas o peso "Bold"
+  weight: "700",
   variable: "--font-cinzel-decorative",
 });
 
@@ -23,17 +23,20 @@ const merriweather = Merriweather({
   variable: "--font-merriweather",
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// Metadata do site
+export const metadata = {
+  title: "Festa Halloween",
+  icons: {
+    icon: "/logo.ico",
+  },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="pt-br"
       className={`${inter.variable} ${cinzel.variable} ${merriweather.variable}`}
     >
-      {/* O <body> agora usará a fonte Merriweather por padrão (definido no globals.css) */}
       <body>
         {children}
         <Toaster />
