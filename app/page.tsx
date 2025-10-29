@@ -58,10 +58,10 @@ export default function HomePage() {
       <div className="fixed top-5 right-5 z-50 flex items-center space-x-2">
         {muted && (
           <div className="flex items-center animate-bounce-slow mr-1">
-            <span className="text-purple-600 font-semibold text-sm tracking-wide whitespace-nowrap animate-glow mr-1">
+            <span className="text-white-600 font-semibold text-sm tracking-wide whitespace-nowrap animate-glow mr-1">
               Clique aqui
             </span>
-            <ArrowRight size={22} className="text-purple-600 animate-glow" />
+            <ArrowRight size={22} className="text-white-600 animate-glow" />
           </div>
         )}
 
