@@ -58,10 +58,10 @@ export default function HomePage() {
       <div className="fixed top-5 right-5 z-50 flex items-center space-x-2">
         {muted && (
           <div className="flex items-center animate-bounce-slow mr-1">
-            <span className="text-white font-semibold text-sm tracking-wide whitespace-nowrap animate-glow mr-1">
+            <span className="text-white-600 font-semibold text-sm tracking-wide whitespace-nowrap animate-glow mr-1">
               Clique aqui
             </span>
-            <ArrowRight size={22} className="text-white animate-glow" />
+            <ArrowRight size={22} className="text-white-600 animate-glow" />
           </div>
         )}
 
@@ -98,19 +98,19 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <CalendarClock className="size-5 flex-shrink-0 text-halloween-500" />
               <span>
-                <span className="font-bold text-white">Data:</span> 15 de
-                Novembro, 20:00
+                <span className="font-bold text-white">Data:</span> 31 de
+                Outubro, 20:00
               </span>
             </div>
-            <div className="flex items-center gap-3 justify-between">
+            <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
                 <MapPin className="size-5 flex-shrink-0 text-halloween-500" />
                 <span>
-                  <span className="font-bold text-white">Local:</span> A Chácara
+                  <span className="font-bold text-white">Local:</span> A Chacará
                   Mal-Assombrada
                 </span>
               </div>
-              {/* Botão do Google Maps */}
+              {/* Botão do Google Maps abaixo */}
               <Button
                 asChild
                 size="sm"
