@@ -151,7 +151,7 @@ export default function HomePage() {
               className="w-full font-sans border-halloween-500/50 text-halloween-500 hover:bg-gray-800 hover:text-halloween-500"
             >
               <a
-                href="https://chat.whatsapp.com/SEU-LINK-AQUI"
+                href="https://chat.whatsapp.com/HTasNmNOILD4L1luXpnDpe"
                 target="_blank"
                 rel="noopener noreferrer"
               >
