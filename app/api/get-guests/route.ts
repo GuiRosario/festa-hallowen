@@ -6,7 +6,7 @@ export const revalidate = 60;
 
 export async function GET() {
   try {
-    const sheet = await getSheet();
+    const sheet = await getSheet("Convidados");
     const rows = await sheet.getRows();
 
     const guests = rows.map((row) => ({

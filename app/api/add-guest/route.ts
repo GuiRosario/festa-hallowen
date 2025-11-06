@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const sheet = await getSheet();
+    const sheet = await getSheet("Convidados");
 
     // Adiciona a nova linha
     // IMPORTANTE: O nome da coluna aqui ("Nome", "Telefone")
