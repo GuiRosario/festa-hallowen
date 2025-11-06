@@ -103,7 +103,7 @@ export async function DELETE(req: Request) {
       .filter(Boolean);
 
     const antes = passageiros.length;
-    passageiros = passageiros.filter((p) => p !== passageiro);
+    passageiros = passageiros.filter((p: string) => p !== passageiro);
 
     if (passageiros.length === antes)
       return NextResponse.json(
