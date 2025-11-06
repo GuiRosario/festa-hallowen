@@ -10,6 +10,7 @@ import {
   Volume2,
   VolumeX,
   ArrowRight,
+  Car,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -181,6 +182,16 @@ export default function HomePage() {
                 </svg>
                 Playlist Spotify
               </a>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              className="w-full bg-red-500 hover:bg-red-700 text-white font-bold font-sans flex items-center justify-center gap-2"
+            >
+              <Link href="/caronas">
+                <Car className="mr-2 size-5" />
+                Caronas
+              </Link>
             </Button>
           </div>
         </div>

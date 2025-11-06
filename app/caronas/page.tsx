@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-import { MessageCircle, MessageCircleMore } from "lucide-react";
+import { MessageCircle, MessageCircleMore, ArrowLeft } from "lucide-react";
 
 export default function CaronasPage() {
   const [caronas, setCaronas] = useState([]);
@@ -25,6 +26,7 @@ export default function CaronasPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [removendo, setRemovendo] = useState<string | null>(null);
   const [isLoadingEntrarCarona, setIsLoadingEntrarCarona] = useState(false);
+  const [isLoadingSalvarCarona, setIsLoadingSalvarCarona] = useState(false);
 
   async function carregar() {
     try {
@@ -44,6 +46,7 @@ export default function CaronasPage() {
   }, []);
 
   async function cadastrar(e) {
+    setIsLoadingSalvarCarona(true);
     e.preventDefault();
     const res = await fetch("/api/caronas", {
       method: "POST",
@@ -58,6 +61,7 @@ export default function CaronasPage() {
       const err = await res.json();
       toast.error(err.error || "Erro ao cadastrar");
     }
+    setIsLoadingSalvarCarona(false);
   }
 
   async function entrarNaCarona() {
@@ -119,6 +123,17 @@ export default function CaronasPage() {
 
   return (
     <div className="max-w-3xl mx-auto py-10 space-y-8">
+      <Button
+        asChild
+        variant="outline"
+        size="sm"
+        className="mb-6 font-sans border-halloween-500/50 text-halloween-500 hover:bg-gray-800 hover:text-halloween-500"
+      >
+        <Link href="/">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar para o Convite
+        </Link>
+      </Button>
       {/* Formulário */}
       <Card className="bg-[#1a1a1a] text-white border border-orange-600 mx-4 sm:mx-0">
         <CardHeader>
@@ -170,6 +185,7 @@ export default function CaronasPage() {
             <Button
               type="submit"
               className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+              disabled={isLoadingSalvarCarona}
             >
               Salvar
             </Button>
@@ -192,6 +208,7 @@ export default function CaronasPage() {
               const vagasRestantes = c.vagasTotais - c.passageiros.length;
               return (
                 <Card
+                  style={{ marginBottom: "20px", marginTop: "20px" }}
                   key={c.id}
                   className="bg-[#1a1a1a] text-white border border-orange-600"
                 >
@@ -324,10 +341,27 @@ export default function CaronasPage() {
             <Label>Telefone</Label>
             <Input
               value={passageiro.telefone}
-              onChange={(e) =>
-                setPassageiro({ ...passageiro, telefone: e.target.value })
-              }
-              placeholder="Seu telefone"
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, "");
+                if (value.length > 11) value = value.slice(0, 11);
+                if (value.length > 10) {
+                  value = value.replace(
+                    /^(\d{2})(\d{5})(\d{4}).*/,
+                    "($1) $2-$3"
+                  );
+                } else if (value.length > 5) {
+                  value = value.replace(
+                    /^(\d{2})(\d{4})(\d{0,4}).*/,
+                    "($1) $2-$3"
+                  );
+                } else if (value.length > 2) {
+                  value = value.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                } else {
+                  value = value.replace(/^(\d*)/, "($1");
+                }
+                setPassageiro({ ...passageiro, telefone: value });
+              }}
+              placeholder="(11) 99999-9999"
               className="bg-[#2a2a2a] border-orange-700"
             />
           </div>
