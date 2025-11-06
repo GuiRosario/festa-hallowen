@@ -14,25 +14,54 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-
 import { MessageCircleMore, ArrowLeft } from "lucide-react";
 
+// 🧾 Tipos fortes
+type Carona = {
+  id: string;
+  motorista: string;
+  telefone: string;
+  vagasTotais: number;
+  passageiros: string[];
+};
+
+type Passageiro = {
+  nome: string;
+  telefone: string;
+};
+
+type FormCarona = {
+  motorista: string;
+  telefone: string;
+  vagas: string;
+};
+
 export default function CaronasPage() {
-  const [caronas, setCaronas] = useState([]);
-  const [form, setForm] = useState({ motorista: "", telefone: "", vagas: "" });
+  const [caronas, setCaronas] = useState<Carona[]>([]);
+  const [form, setForm] = useState<FormCarona>({
+    motorista: "",
+    telefone: "",
+    vagas: "",
+  });
   const [abrirDialog, setAbrirDialog] = useState(false);
-  const [caronaSelecionada, setCaronaSelecionada] = useState(null);
-  const [passageiro, setPassageiro] = useState({ nome: "", telefone: "" });
+  const [caronaSelecionada, setCaronaSelecionada] = useState<Carona | null>(
+    null
+  );
+  const [passageiro, setPassageiro] = useState<Passageiro>({
+    nome: "",
+    telefone: "",
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [removendo, setRemovendo] = useState<string | null>(null);
   const [isLoadingEntrarCarona, setIsLoadingEntrarCarona] = useState(false);
   const [isLoadingSalvarCarona, setIsLoadingSalvarCarona] = useState(false);
 
+  // 🧭 Carregar caronas
   async function carregar() {
     try {
       const res = await fetch("/api/caronas", { cache: "no-store" });
-      const data = await res.json();
-      setCaronas(Array.isArray(data) ? data : []); // ✅ garante que é array
+      const data: Carona[] = await res.json();
+      setCaronas(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
       toast.error("Erro ao carregar caronas");
@@ -46,6 +75,7 @@ export default function CaronasPage() {
     carregar();
   }, []);
 
+  // 🚗 Cadastrar nova carona
   async function cadastrar(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoadingSalvarCarona(true);
@@ -71,6 +101,7 @@ export default function CaronasPage() {
     }
   }
 
+  // 🙋‍♂️ Entrar em uma carona
   async function entrarNaCarona() {
     if (!caronaSelecionada) return;
     setIsLoadingEntrarCarona(true);
@@ -102,7 +133,8 @@ export default function CaronasPage() {
     }
   }
 
-  async function removerPassageiro(id, passageiro) {
+  // ❌ Remover passageiro
+  async function removerPassageiro(id: string, passageiro: string) {
     if (!confirm(`Remover "${passageiro}" desta carona?`)) return;
     setRemovendo(`${id}-${passageiro}`);
 
@@ -127,6 +159,7 @@ export default function CaronasPage() {
     }
   }
 
+  // ⏳ Loading inicial
   if (isLoading) {
     return (
       <div className="text-center text-gray-400 py-10">
@@ -137,6 +170,7 @@ export default function CaronasPage() {
 
   return (
     <div className="max-w-3xl mx-auto py-10 space-y-8">
+      {/* Voltar */}
       <Button
         asChild
         variant="outline"
@@ -253,7 +287,7 @@ export default function CaronasPage() {
                       {Array.isArray(c.passageiros) &&
                       c.passageiros.length > 0 ? (
                         <ul className="list-disc ml-6 mt-1 text-sm space-y-1">
-                          {c.passageiros.map((p, i) => {
+                          {c.passageiros.map((p: string, i: number) => {
                             const [nome, telRaw] = p.split(" - ");
                             const telefoneLimpo = (telRaw ?? "").replace(
                               /\D/g,
@@ -270,7 +304,6 @@ export default function CaronasPage() {
                                 <span>{nome ?? "Sem nome"}</span>
 
                                 <div className="flex gap-2">
-                                  {/* WhatsApp passageiro */}
                                   {telefoneLimpo && (
                                     <a
                                       href={`https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(
