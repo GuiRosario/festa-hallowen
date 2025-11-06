@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-import { MessageCircle, MessageCircleMore, ArrowLeft } from "lucide-react";
+import { MessageCircleMore, ArrowLeft } from "lucide-react";
 
 export default function CaronasPage() {
   const [caronas, setCaronas] = useState([]);
@@ -32,10 +32,11 @@ export default function CaronasPage() {
     try {
       const res = await fetch("/api/caronas", { cache: "no-store" });
       const data = await res.json();
-      setCaronas(data);
+      setCaronas(Array.isArray(data) ? data : []); // ✅ garante que é array
     } catch (err) {
       console.error(err);
       toast.error("Erro ao carregar caronas");
+      setCaronas([]);
     } finally {
       setIsLoading(false);
     }
@@ -45,52 +46,65 @@ export default function CaronasPage() {
     carregar();
   }, []);
 
-  async function cadastrar(e) {
-    setIsLoadingSalvarCarona(true);
+  async function cadastrar(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const res = await fetch("/api/caronas", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    if (res.ok) {
-      toast.success("✅ Carona cadastrada com sucesso!");
-      setForm({ motorista: "", telefone: "", vagas: "" });
-      carregar();
-    } else {
-      const err = await res.json();
-      toast.error(err.error || "Erro ao cadastrar");
+    setIsLoadingSalvarCarona(true);
+
+    try {
+      const res = await fetch("/api/caronas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        toast.success("✅ Carona cadastrada com sucesso!");
+        setForm({ motorista: "", telefone: "", vagas: "" });
+        carregar();
+      } else {
+        const err = await res.json();
+        toast.error(err.error || "Erro ao cadastrar");
+      }
+    } catch {
+      toast.error("Erro de rede");
+    } finally {
+      setIsLoadingSalvarCarona(false);
     }
-    setIsLoadingSalvarCarona(false);
   }
 
   async function entrarNaCarona() {
+    if (!caronaSelecionada) return;
     setIsLoadingEntrarCarona(true);
-    const res = await fetch("/api/caronas", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: caronaSelecionada.id,
-        nome: passageiro.nome,
-        telefone: passageiro.telefone,
-      }),
-    });
 
-    if (res.ok) {
-      toast.success("🚗 Você entrou na carona!");
-      setAbrirDialog(false);
-      setPassageiro({ nome: "", telefone: "" });
-      carregar();
-    } else {
-      const err = await res.json();
-      toast.error(err.error || "Erro ao entrar na carona");
+    try {
+      const res = await fetch("/api/caronas", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: caronaSelecionada.id,
+          nome: passageiro.nome,
+          telefone: passageiro.telefone,
+        }),
+      });
+
+      if (res.ok) {
+        toast.success("🚗 Você entrou na carona!");
+        setAbrirDialog(false);
+        setPassageiro({ nome: "", telefone: "" });
+        carregar();
+      } else {
+        const err = await res.json();
+        toast.error(err.error || "Erro ao entrar na carona");
+      }
+    } catch {
+      toast.error("Erro de rede");
+    } finally {
+      setIsLoadingEntrarCarona(false);
     }
-    setIsLoadingEntrarCarona(false);
   }
 
   async function removerPassageiro(id, passageiro) {
     if (!confirm(`Remover "${passageiro}" desta carona?`)) return;
-    setRemovendo(`${id}-${passageiro}`); // 👈 define o passageiro sendo removido
+    setRemovendo(`${id}-${passageiro}`);
 
     try {
       const res = await fetch("/api/caronas", {
@@ -106,10 +120,10 @@ export default function CaronasPage() {
         const err = await res.json();
         toast.error(err.error || "Erro ao remover passageiro");
       }
-    } catch (e) {
+    } catch {
       toast.error("Erro de rede");
     } finally {
-      setRemovendo(null); // 👈 limpa o estado de loading
+      setRemovendo(null);
     }
   }
 
@@ -134,6 +148,7 @@ export default function CaronasPage() {
           Voltar para o Convite
         </Link>
       </Button>
+
       {/* Formulário */}
       <Card className="bg-[#1a1a1a] text-white border border-orange-600 mx-4 sm:mx-0">
         <CardHeader>
@@ -152,22 +167,18 @@ export default function CaronasPage() {
               placeholder="Telefone"
               value={form.telefone}
               onChange={(e) => {
-                let valor = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
-
+                let valor = e.target.value.replace(/\D/g, "");
                 if (valor.length <= 10) {
-                  // formato (11) 9999-9999
                   valor = valor.replace(
                     /^(\d{2})(\d{4})(\d{0,4}).*/,
                     "($1) $2-$3"
                   );
                 } else {
-                  // formato (11) 99999-9999
                   valor = valor.replace(
                     /^(\d{2})(\d{5})(\d{0,4}).*/,
                     "($1) $2-$3"
                   );
                 }
-
                 setForm({ ...form, telefone: valor });
               }}
               maxLength={15}
@@ -198,44 +209,37 @@ export default function CaronasPage() {
         <h2 className="font-title text-3xl mb-6 text-center text-white">
           Lista de Caronas
         </h2>
+
         <div className="bg-gray-900/90 p-6 rounded-2xl border border-halloween-500/30 shadow-lg shadow-halloween-500/10 backdrop-blur-sm mx-4 sm:mx-0">
-          {caronas.length === 0 ? (
-            <p className="text-gray-400 text-center">
-              Nenhuma carona cadastrada ainda.
-            </p>
-          ) : (
+          {Array.isArray(caronas) && caronas.length > 0 ? (
             caronas.map((c) => {
-              const vagasRestantes = c.vagasTotais - c.passageiros.length;
+              const vagasRestantes =
+                (c.vagasTotais ?? 0) - (c.passageiros?.length ?? 0);
+
               return (
                 <Card
-                  style={{ marginBottom: "20px", marginTop: "20px" }}
                   key={c.id}
-                  className="bg-[#1a1a1a] text-white border border-orange-600"
+                  className="bg-[#1a1a1a] text-white border border-orange-600 my-5"
                 >
                   <CardHeader>
-                    <div
-                      style={{ display: "flex", alignItems: "center" }}
-                      className="text-orange-500 font-semibold"
-                    >
-                      <p>🚗 {c.motorista} - </p>
-                      {
-                        <a
-                          href={`https://wa.me/55${c.telefone.replace(
-                            /\D/g,
-                            ""
-                          )}?text=${encodeURIComponent(
-                            `Oi ${c.motorista}, vi sua carona no site!`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-md border border-green-600 text-green-400 hover:bg-green-700 hover:text-white transition"
-                          style={{ marginLeft: "4px" }}
-                        >
-                          <MessageCircleMore className=" size-4" />
-                        </a>
-                      }
+                    <div className="text-orange-500 font-semibold flex items-center">
+                      <p>🚗 {c.motorista ?? "Motorista desconhecido"} - </p>
+                      <a
+                        href={`https://wa.me/55${(c.telefone ?? "").replace(
+                          /\D/g,
+                          ""
+                        )}?text=${encodeURIComponent(
+                          `Oi ${c.motorista ?? ""}, vi sua carona no site!`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-md border border-green-600 text-green-400 hover:bg-green-700 hover:text-white transition ml-1"
+                      >
+                        <MessageCircleMore className="size-4" />
+                      </a>
                     </div>
                   </CardHeader>
+
                   <CardContent>
                     <p className="mb-2 text-sm text-gray-300">
                       Vagas restantes:{" "}
@@ -243,11 +247,18 @@ export default function CaronasPage() {
                         {vagasRestantes}
                       </span>
                     </p>
+
                     <div className="mb-3">
                       <strong className="text-orange-300">Passageiros:</strong>
-                      {c.passageiros.length > 0 ? (
+                      {Array.isArray(c.passageiros) &&
+                      c.passageiros.length > 0 ? (
                         <ul className="list-disc ml-6 mt-1 text-sm space-y-1">
                           {c.passageiros.map((p, i) => {
+                            const [nome, telRaw] = p.split(" - ");
+                            const telefoneLimpo = (telRaw ?? "").replace(
+                              /\D/g,
+                              ""
+                            );
                             const key = `${c.id}-${p}`;
                             const isLoadingBtn = removendo === key;
 
@@ -256,27 +267,23 @@ export default function CaronasPage() {
                                 key={i}
                                 className="flex justify-between items-center"
                               >
-                                <span>{p.split(" - ")[0]}</span>
+                                <span>{nome ?? "Sem nome"}</span>
 
                                 <div className="flex gap-2">
-                                  {/* Botão WhatsApp */}
-                                  <a
-                                    href={`https://wa.me/55${p
-                                      .split(" - ")[1]
-                                      .replace(
-                                        /\D/g,
-                                        ""
-                                      )}?text=${encodeURIComponent(
-                                      `Oi ${p.split(" - ")[0]}`
-                                    )}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-2 rounded-md border border-green-600 text-green-400 hover:bg-green-700 hover:text-white transition"
-                                  >
-                                    <MessageCircleMore className=" size-4" />
-                                  </a>
+                                  {/* WhatsApp passageiro */}
+                                  {telefoneLimpo && (
+                                    <a
+                                      href={`https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(
+                                        `Oi ${nome ?? ""}`
+                                      )}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="p-2 rounded-md border border-green-600 text-green-400 hover:bg-green-700 hover:text-white transition"
+                                    >
+                                      <MessageCircleMore className="size-4" />
+                                    </a>
+                                  )}
 
-                                  {/* Botão Remover */}
                                   <Button
                                     size="sm"
                                     variant="outline"
@@ -301,6 +308,7 @@ export default function CaronasPage() {
                         </p>
                       )}
                     </div>
+
                     {vagasRestantes > 0 && (
                       <Button
                         onClick={() => {
@@ -316,6 +324,10 @@ export default function CaronasPage() {
                 </Card>
               );
             })
+          ) : (
+            <p className="text-gray-400 text-center">
+              Nenhuma carona cadastrada ainda.
+            </p>
           )}
         </div>
       </div>
@@ -325,9 +337,10 @@ export default function CaronasPage() {
         <DialogContent className="bg-[#1a1a1a] border border-orange-600 text-white">
           <DialogHeader>
             <DialogTitle className="text-orange-400">
-              Entrar na carona de {caronaSelecionada?.motorista}
+              Entrar na carona de {caronaSelecionada?.motorista ?? "motorista"}
             </DialogTitle>
           </DialogHeader>
+
           <div className="space-y-3 mt-2">
             <Label>Nome</Label>
             <Input
@@ -365,6 +378,7 @@ export default function CaronasPage() {
               className="bg-[#2a2a2a] border-orange-700"
             />
           </div>
+
           <DialogFooter>
             <Button
               onClick={entrarNaCarona}
