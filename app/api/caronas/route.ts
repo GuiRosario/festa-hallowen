@@ -12,7 +12,7 @@ export async function GET() {
     vagasTotais: Number(r.get("Vagas")),
     passageiros: (r.get("Passageiros") || "")
       .split(",")
-      .map((p) => p.trim())
+      .map((p: string) => p.trim())
       .filter(Boolean),
   }));
 
