@@ -62,7 +62,7 @@ export async function PUT(req: Request) {
 
   const passageiros = (row.get("Passageiros") || "")
     .split(",")
-    .map((p) => p.trim())
+    .map((p: string) => p.trim())
     .filter(Boolean);
 
   const vagasTotais = Number(row.get("Vagas"));
@@ -99,7 +99,7 @@ export async function DELETE(req: Request) {
 
     let passageiros = (row.get("Passageiros") || "")
       .split(",")
-      .map((p) => p.trim())
+      .map((p: string) => p.trim())
       .filter(Boolean);
 
     const antes = passageiros.length;
