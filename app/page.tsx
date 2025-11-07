@@ -167,7 +167,7 @@ export default function HomePage() {
               className="w-full bg-green-600 hover:bg-green-700 text-white font-bold font-sans flex items-center justify-center gap-2"
             >
               <a
-                href="https://open.spotify.com/playlist/0EcZNN2ncyFhvbef0aY3Y2?si=0DHCzyfPQ5KluBnC9yp0zg&pt=16e35bcb562ef4c9575166cc941b0e7e&pi=C7B0wshPTeyMw"
+                href="https://open.spotify.com/playlist/0EcZNN2ncyFhvbef0aY3Y2?si=XiqrLeS6RmKwAag9nHfVog&pt=cca6331a7a87703fc9970584e15e923f&pi=Sgfd2FHISVCfc"
                 target="_blank"
                 rel="noopener noreferrer"
               >
