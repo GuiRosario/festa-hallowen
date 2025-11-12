@@ -18,6 +18,9 @@ import { Button } from "@/components/ui/button";
 export default function HomePage() {
   const [muted, setMuted] = useState(true);
   const toggleMute = () => setMuted(!muted);
+  const paymentDisabled = true; // ou uma variável de estado / prop
+  const groupDisabled = true;
+
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -134,34 +137,57 @@ export default function HomePage() {
           </p>
 
           <div className="mt-10 flex flex-col gap-4">
-            <Button
-              asChild
-              size="lg"
-              className="w-full bg-halloween-500 text-gray-900 hover:bg-halloween-600 font-bold font-sans"
-              disabled
-            >
-              <Link href="/pagamento">
-                <CreditCard className="mr-2 size-5" />
-                Confirmar e Pagar (R$ 25)
-              </Link>
-            </Button>
+             {paymentDisabled ? (
+    <button
+      disabled
+      className="w-full bg-halloween-500/40 text-gray-400 font-bold font-sans py-3 rounded-lg cursor-not-allowed"
+      aria-disabled="true"
+      title="Pagamento indisponível"
+    >
+      <CreditCard className="mr-2 size-5 inline-block" />
+      Confirmar e Pagar (R$ 25)
+    </button>
+  ) : (
+    <Button
+      asChild
+      size="lg"
+      className="w-full bg-halloween-500 text-gray-900 hover:bg-halloween-600 font-bold font-sans"
+    >
+      <Link href="/pagamento">
+        <CreditCard className="mr-2 size-5" />
+        Confirmar e Pagar (R$ 25)
+      </Link>
+    </Button>
+  )}
 
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="w-full font-sans border-halloween-500/50 text-halloween-500 hover:bg-gray-800 hover:text-halloween-500"
-              disabled
-            >
-              <a
-                href="https://chat.whatsapp.com/HTasNmNOILD4L1luXpnDpe"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MessageCircle className="mr-2 size-5" />
-                Entrar no Grupo
-              </a>
-            </Button>
+            {groupDisabled ? (
+    <button
+      disabled
+      className="w-full border border-halloween-500/30 text-gray-400 font-sans py-3 rounded-lg cursor-not-allowed bg-transparent"
+      aria-disabled="true"
+      title="Grupo indisponível"
+    >
+      <MessageCircle className="mr-2 size-5 inline-block" />
+      Entrar no Grupo
+    </button>
+  ) : (
+    <Button
+      asChild
+      size="lg"
+      variant="outline"
+      className="w-full font-sans border-halloween-500/50 text-halloween-500 hover:bg-gray-800 hover:text-halloween-500"
+    >
+      <a
+        href="https://chat.whatsapp.com/HTasNmNOILD4L1luXpnDpe"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <MessageCircle className="mr-2 size-5" />
+        Entrar no Grupo
+      </a>
+    </Button>
+  )}
+
             {/* Botão Spotify */}
             <Button
               asChild
