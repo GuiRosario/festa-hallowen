@@ -138,6 +138,7 @@ export default function HomePage() {
               asChild
               size="lg"
               className="w-full bg-halloween-500 text-gray-900 hover:bg-halloween-600 font-bold font-sans"
+              disabled
             >
               <Link href="/pagamento">
                 <CreditCard className="mr-2 size-5" />
@@ -150,6 +151,7 @@ export default function HomePage() {
               size="lg"
               variant="outline"
               className="w-full font-sans border-halloween-500/50 text-halloween-500 hover:bg-gray-800 hover:text-halloween-500"
+              disabled
             >
               <a
                 href="https://chat.whatsapp.com/HTasNmNOILD4L1luXpnDpe"
